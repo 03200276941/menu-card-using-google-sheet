@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Cards</title>
+  <style>
+    :root {
+      --primary: #e63946;
+      --secondary: #f1faee;
+      --accent: #457b9d;
+      --dark: #1d3557;
+      --light: #f9fafb;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: var(--light);
+      margin: 0;
+      padding: 40px 20px;
+      background-image: radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 0);
+      background-size: 25px 25px;
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--dark);
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      position: relative;
+      display: inline-block;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    h1:after {
+      content: '';
+      position: absolute;
+      width: 60%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      bottom: -10px;
+      left: 20%;
+      border-radius: 2px;
+    }
+
+    #container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1300px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      position: relative;
+      z-index: 1;
+    }
+
+    .card::before {
+      display: none;
+    }
+
+    .card-img-container {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 20px;
+      text-align: left;
+    }
+
+    .card-content h3 {
+      font-size: 1.4rem;
+      color: var(--dark);
+      margin: 0 0 12px;
+      font-weight: 600;
+      position: relative;
+      display: inline-block;
+    }
+
+    .card-content h3::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      bottom: -4px;
+      left: 0;
+    }
+
+    .card-content p {
+      margin: 8px 0;
+      font-size: 0.95rem;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .price {
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 15px;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .price::before {
+      content: '₨';
+      margin-right: 4px;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 1200px) {
+      #container {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 2rem;
+      }
+
+      #container {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+      }
+    }
+
+    .credit {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <h1>Product Showcase</h1>
+  <div id="container"></div>
+  <p class="credit">Created by Muhammad Bakhtawar Khan</p>
+
+  <script>
+    const sheet_id = '11_2LPcpui_s_bh71O35QoTcW6ey5X-2EGj0qvmiOlr4';
+    const Range = 'B2:E15';
+    const api_key = 'AIzaSyAujRd62kDheKBWAGbydc1YglJE6KDD8v8';
+    const api = `https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/${Range}?key=${api_key}`;
+    const div = document.getElementById('container');
+
+    fetch(api)
+    .then((response) => response.json())
+    .then((item) => {
+        const list = item.values;
+        for (let i = 0; i < list.length; i++) {
+            div.innerHTML += `
+                <div class="card" onclick="handleDelete(this);">
+                  <div class="card-img-container">
+                    <img src="${list[i][1]}" alt="Product Image"/>
+                  </div>
+                  <div class="card-content">
+                    <h3>${list[i][0]}</h3>
+                    <p>${list[i][2]}</p>
+                    <p class="price">${list[i][3]}</p>
+                  </div>
+                </div>
+            `;
+        }
+    });
+  </script>
+</body>
+</html>
